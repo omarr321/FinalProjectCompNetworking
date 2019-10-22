@@ -11,7 +11,7 @@ Our project is a game where 8 people join and try to cover the grid in there col
 1. Frontend UI
 2. Backend server
 3. talking to eachother
-##Team Members
+## Team Members
 - Omar Radwan, <Role>
 - Konstantina Dimaki, <Role>
 - Luis Vargas, <Role>
