@@ -48,15 +48,19 @@ class Player():
 
     def getTiles(self):
         return copy.deepcopy(self.__tiles)
+        #return self.__tiles
 
     def getCurrentPos(self):
         return copy.deepcopy(self.__currentPos)
+        #return self.__currentPos
 
     def getColor(self):
         return copy.deepcopy(self.__color)
+        #return self.__color
 
     def getClientInfo(self):
-        return copy.deepcopy(self.__clientInfo)
+        return copy.copy(self.__clientInfo)
+        #return self.__clientInfo
 
     def toString(self):
         return "Player addr: " + str(self.__clientInfo) + "\nPlayer color: " + str(self.__color) + "\nPlayer current position: " + str(self.__currentPos) + "\nTiles owned: " + str(self.__tiles)

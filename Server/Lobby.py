@@ -1,43 +1,53 @@
-from socket import *
+import Game
+import threading
+import time
+import socket
+import copy
 
-HOST = "10.220.82.180"
-PORT = 255
-server = (HOST, PORT)
+class Lobby():
+    def __init__(self):
+        self.__LobbyList = []
+        self.__PeopleInGame = []
 
-serverSocket = socket(AF_INET, SOCK_STREAM)
-serverSocket.bind(server)
-serverSocket.listen(10)
-print("The server is ready to receive...")
+    def connect(self, client, addr):
+        if (self.__LobbyList.__len__() == 2):
+            print("Error: lobby is full")
+            return False
+        self.__LobbyList.append((client, addr))
+        print(str(addr) + " was added successfully")
+        return True
 
-while(True):
-    gameList = []
-    while(gameList.__len__() < 3):
-        connectSocket, addr = serverSocket.accept()
-        gameList.append(addr)
-        print(str(gameList))
-    print("That is three people")
-    print(str(gameList))
-    break
+    def remove(self, client, addr):
+        self.__LobbyList.remove((client, addr))
+        print(str(addr) + " was removed successfully")
 
-#----------Code example----------
-#----not used in final design----
-#from socket import *
-#
-#HOST = '10.220.90.5'
-#serverPort = 25535
-#
-#serverSocket = socket(AF_INET, SOCK_STREAM)
-#serverSocket.bind((HOST, serverPort))
-#serverSocket.listen(1)
-#print('The server is ready to receive')
-#while True:
-#    connectionSocket, addr = serverSocket.accept()
-#
-#    message = connectionSocket.recv(1024).decode()
-#    print('message recieved:', message)
-#    modifiedMessage = message.upper()
-#    print('message edited:', modifiedMessage)
-#    connectionSocket.send(modifiedMessage.encode())
-#    print('Message has been sent back')
-#
-#    connectionSocket.close()
+    def __checkLobby(self):
+        print("checking Lobby...")
+        print("[", end = "")
+        for x in self.__LobbyList:
+            print(x[1], end = ", ")
+        print("]")
+        if(self.__LobbyList.__len__() == 2):
+            print("Lobby is full; creating game...")
+            return True
+        return False
+
+    def startGame(self):
+        print("starting game...")
+        gameList = self.__LobbyList
+        time.sleep(5)
+        temp = Game.Game(gameList, 5, 3)
+        # temp.play()
+        print("reached the end")
+
+    def run(self):
+        while(True):
+            if(self.__checkLobby()):
+                newGame = Game.Game(self.__LobbyList, 5, 3)
+                game = threading.Thread(target=newGame.play)
+                game.start()
+                self.__LobbyList = []
+                print("Done!")
+            else:
+                print("Lobby still has room")
+            time.sleep(2)

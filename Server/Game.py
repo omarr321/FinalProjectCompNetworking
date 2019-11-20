@@ -1,4 +1,7 @@
 import Round
+import time
+import json
+import socket
 
 class Game():
     def __init__(self, players, gridSize, numOfRounds = 3):
@@ -43,18 +46,48 @@ class Game():
                 score = score + scoreChange
                 x.append(score)
 
-    def __printScores(self):
+#    def __printScores(self):
+#        temp = []
+#        for x in self.__scores:
+#            copyFlip = [x[1], x[0]]
+#            temp.append(copyFlip)
+#            
+#        temp.sort()
+#        print("current Standings:")
+#
+#        for x in range(0, temp.__len__()):
+#            current = temp.pop()
+#            print(str(x + 1) + ". " + str(self.__roundCurrent.getPlayerColor(current[1])) + " with " + str(current[0]) + " points!")
+
+    def __sendScores(self, final):
         temp = []
         for x in self.__scores:
             copyFlip = [x[1], x[0]]
             temp.append(copyFlip)
-            
-        temp.sort()
-        print("current Standings:")
 
+        temp.sort()
+        
+        pythonData = []
         for x in range(0, temp.__len__()):
-            current = temp.pop()
-            print(str(x + 1) + ". " + str(self.__roundCurrent.getPlayerColor(current[1])) + " with " + str(current[0]) + " points!")
+            pythonData.append(temp.pop())
+        jsonData = json.dumps(pythonData)
+
+        if (final == False):
+            data = {
+            "request":False,
+            "type":"ScoreBoard",
+            "scores":jsonData
+            }
+        else:
+            data = {
+            "request":False,
+            "type":"FinalScoreBoard",
+            "scores":jsonData
+            }
+        data = json.dumps(data)
+
+        for x in self.__players:
+            x[0].send(data.encode())        
 
     def play(self):
         self.__roundCurrent = Round.Round(self.__players, self.__gridSize)
@@ -62,9 +95,11 @@ class Game():
 
         gameLists = self.__getNextRoundLists(gameData)
 
-        self.__printScores()
+        print("sending scores...")
+        self.__sendScores(False)
 
-        input("press anything to continue...")
+        print("continuing after 5 seconds...")
+        time.sleep(5)
 
         for x in range(0, self.__numOfRound):
             self.__roundCurrent = Round.Round(gameLists[0], self.__gridSize, gameLists[1])
@@ -72,6 +107,18 @@ class Game():
 
             gameLists = self.__getNextRoundLists(gameData)
 
-            self.__printScores()
-            input("press anything to continue...")
+            if (x == self.__numOfRound):
+                print("sending final scores...")
+                self.__sendScores(True)
+            else:
+                print("sending scores...")
+                self.__sendScores(False)
+            
+            print("continuing after 5 seconds...")
+            time.sleep(5)
+        
+        print("ending game...")
+        print("Done!")
+        
+        
         

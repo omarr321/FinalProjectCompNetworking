@@ -1,5 +1,8 @@
 import GameBoard
 import copy
+import time
+import json
+import socket
 
 class Round():
     def __init__(self, players, gridSize, colors = None):
@@ -47,10 +50,16 @@ class Round():
     
     def __getInput(self, player):
         while(True):
-            valueIn = input(">")
-            if(self.__checkInput(valueIn)):
-                return valueIn
-            print("Error: not vaild input; try again:")
+            data = player[0].recv(1024).decode()
+            try:
+                data = json.loads(data)
+                valueIn = data["move"]
+                if(self.__checkInput(valueIn)):
+                    return valueIn
+                print("Error: not vaild input")
+            except:
+                print("Error: not vaild format")
+            player[0].send("400 error; not a vaild move or format".encode())
 
     def __checkInput(self, input):
         vaildIn = False
@@ -63,86 +72,108 @@ class Round():
     def __checkPlayer(self, player):
         return not(self.__gameBoard.canMove(player))
 
-    def __printGame(self):
-        data = self.__gameBoard.getPlayersTiles()
+#    def __printGame(self):
+#        data = self.__gameBoard.getPlayersTiles()
+#
+#        for y in range(1, self.__gridSize + 1):
+#            for p in range(1, self.__gridSize):
+#                print("-----", end = "", flush = True)
+#            print("------")
+#            for x in range(1, self.__gridSize + 1):
+#                dataPrintFlag = False
+#                for d in data:
+#                    
+#                    for t in d[2]:
+#                        
+#                        if (t == [x, y]):
+#                            if (d[0] == "Red"):
+#                                if (d[1] == t):
+#                                    print("|(re)", end = "", flush = True)
+#                                else:
+#                                    print("| re ", end = "", flush = True)
+#                                dataPrintFlag = True
+#                            elif (d[0] == "Blue"):
+#                                if (d[1] == t):
+#                                    print("|(bl)", end = "", flush = True)
+#                                else:
+#                                    print("| bl ", end = "", flush = True)
+#                                dataPrintFlag = True
+#                            elif (d[0] == "Green"):
+#                                if (d[1] == t):
+#                                    print("|(gr)", end = "", flush = True)
+#                                else:
+#                                    print("| gr ", end = "", flush = True)
+#                                dataPrintFlag = True
+#                            elif (d[0] == "Purple"):
+#                                if (d[1] == t):
+#                                    print("|(pu)", end = "", flush = True)
+#                                else:
+#                                    print("| pu ", end = "", flush = True)
+#                                dataPrintFlag = True
+#                            elif (d[0] == "Pink"):
+#                                if (d[1] == t):
+#                                   print("|(pi)", end = "", flush = True)
+#                                else:
+#                                    print("| pi ", end = "", flush = True)
+#                                dataPrintFlag = True
+#                if (not(dataPrintFlag)):
+#                    print("|    ", end = "", flush = True)
+#            print("|")
+#        for p in range(1, self.__gridSize):
+#            print("-----", end = "", flush = True)
+#        print("------")
 
-        for y in range(1, self.__gridSize + 1):
-            for p in range(1, self.__gridSize):
-                print("-----", end = "", flush = True)
-            print("------")
-            for x in range(1, self.__gridSize + 1):
-                dataPrintFlag = False
-                for d in data:
-                    
-                    for t in d[2]:
-                        
-                        if (t == [x, y]):
-                            if (d[0] == "Red"):
-                                if (d[1] == t):
-                                    print("|(re)", end = "", flush = True)
-                                else:
-                                    print("| re ", end = "", flush = True)
-                                dataPrintFlag = True
-                            elif (d[0] == "Blue"):
-                                if (d[1] == t):
-                                    print("|(bl)", end = "", flush = True)
-                                else:
-                                    print("| bl ", end = "", flush = True)
-                                dataPrintFlag = True
-                            elif (d[0] == "Green"):
-                                if (d[1] == t):
-                                    print("|(gr)", end = "", flush = True)
-                                else:
-                                    print("| gr ", end = "", flush = True)
-                                dataPrintFlag = True
-                            elif (d[0] == "Purple"):
-                                if (d[1] == t):
-                                    print("|(pu)", end = "", flush = True)
-                                else:
-                                    print("| pu ", end = "", flush = True)
-                                dataPrintFlag = True
-                            elif (d[0] == "Pink"):
-                                if (d[1] == t):
-                                    print("|(pi)", end = "", flush = True)
-                                else:
-                                    print("| pi ", end = "", flush = True)
-                                dataPrintFlag = True
-                if (not(dataPrintFlag)):
-                    print("|    ", end = "", flush = True)
-            print("|")
-        for p in range(1, self.__gridSize):
-            print("-----", end = "", flush = True)
-        print("------")
+    def __sendGame(self, currentPlayer, request):
+        pythonData = self.__gameBoard.getPlayersTiles()
+        pythonData = json.dumps(pythonData)
+        color = json.dumps(self.__gameBoard.getPlayerColor(currentPlayer))
+
+        data = {
+            "request":request,
+            "type":"gameBoard",
+            "currentPlayer":color,
+            "board":pythonData
+        }
+        jsonData = json.dumps(data)
+        print(jsonData)
+        currentPlayer[0].send(jsonData.encode())
+        
+        
 
     def getPlayerColor(self, player):
         return self.__gameBoard.getPlayerColor(player)
 
     def run(self):
+        for x in self.__players:
+            self.__sendGame(x, False)
+
         while (self.__currentPlayers.__len__() > 1):
             for x in self.__currentPlayers:
 
                 print ("Current Turn: " + self.__gameBoard.getPlayerColor(x))
                 
-                self.__printGame()
-                print("What would you like to do? (UP, DOWN, LEFT, RIGHT)")
+                self.__sendGame(x, True)
                 while(True):
                     moveIn = self.__getInput(x)
                     if(moveIn == "RIGHT"):
                         if(self.__movePlayer(x, 1, 0)):
                             break
-                        print("Try again")
+                        x[0].send("400 error; not a vaild move or format".encode())
                     elif(moveIn == "LEFT"):
                         if(self.__movePlayer(x, -1, 0)):
                             break
-                        print("Try again")
+                        x[0].send("400 error; not a vaild move or format".encode())
                     elif(moveIn == "UP"):
                         if(self.__movePlayer(x, 0, -1)):
                             break
-                        print("Try again")
+                        x[0].send("400 error; not a vaild move or format".encode())
                     elif(moveIn == "DOWN"):
                         if(self.__movePlayer(x, 0, 1)):
                             break
-                        print("Try again")
+                        x[0].send("400 error; not a vaild move or format".encode())
+
+                for x in self.__players:
+                    self.__sendGame(x, False)
 
                 for x in self.__currentPlayers:
                     if (self.__checkPlayer(x)):
@@ -151,9 +182,9 @@ class Round():
                         self.__listInWiningOrder.append(temp)
         temp = [self.__currentPlayers[0], self.__gameBoard.getPlayerColor(self.__currentPlayers[0])]
         self.__listInWiningOrder.append(temp)
-        self.__printGame()
         print(self.__gameBoard.getPlayerColor(self.__currentPlayers[0]) + " has won the round!")
-        input("press anything to continue...")
+        print("continuing after 5 seconds...")
+        time.sleep(5)
         return copy.deepcopy(self.__listInWiningOrder)
 
         
