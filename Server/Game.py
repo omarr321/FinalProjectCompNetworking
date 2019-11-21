@@ -90,6 +90,7 @@ class Game():
             x[0].send(data.encode())        
 
     def play(self):
+        time.sleep(5)
         self.__roundCurrent = Round.Round(self.__players, self.__gridSize)
         gameData = self.__roundCurrent.run()
 

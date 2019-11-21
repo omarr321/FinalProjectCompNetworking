@@ -58,7 +58,19 @@ class Receiver():
 
         if (closed == False):
             try:
-                client.send("200 ok".encode())    
+                client.send("200 ok".encode())
+                
+                time.sleep(1)
+
+                while(True):
+                    if (self.lobby.checkInGame((client, addr)) == True):
+                        print(str(addr) + " is in a game exiting Receiver...")
+                        client.send("game start".encode())
+                        break
+                    else:
+                        client.send("alive?".encode())
+                        client.recv(1024)
+                    time.sleep(1)
             except:
                 print(str(addr) + " has disconnected!")
                 print("Cleaning up...")

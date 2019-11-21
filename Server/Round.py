@@ -48,8 +48,22 @@ class Round():
             print(ve)
             return False
     
-    def __getInput(self, player):
+    def __getInput(self, player, badMove = False):
         while(True):
+            if (badMove == False):
+                data = {
+                    "request":True,
+                    "type":"move"
+                }
+            else:
+                data = {
+                    "request":True,
+                    "type":"move",
+                    "error":"Not a vaild input or format"
+                }
+            data = json.dumps(data)
+            player[0].send(data.encode())
+            badMove = False
             data = player[0].recv(1024).decode()
             try:
                 data = json.loads(data)
@@ -57,9 +71,11 @@ class Round():
                 if(self.__checkInput(valueIn)):
                     return valueIn
                 print("Error: not vaild input")
+                badMove = True
             except:
                 print("Error: not vaild format")
-            player[0].send("400 error; not a vaild move or format".encode())
+                badMove = True
+                
 
     def __checkInput(self, input):
         vaildIn = False
@@ -123,17 +139,26 @@ class Round():
 #            print("-----", end = "", flush = True)
 #        print("------")
 
-    def __sendGame(self, currentPlayer, request):
+    def __sendGame(self, currentPlayer, request, yourColor = None):
         pythonData = self.__gameBoard.getPlayersTiles()
         pythonData = json.dumps(pythonData)
         color = json.dumps(self.__gameBoard.getPlayerColor(currentPlayer))
 
-        data = {
-            "request":request,
-            "type":"gameBoard",
-            "currentPlayer":color,
-            "board":pythonData
-        }
+        if (yourColor == None):
+            data = {
+                "request":request,
+                "type":"gameBoard",
+                "currentPlayer":color,
+                "board":pythonData
+            }
+        else:
+            data = {
+                "request":request,
+                "type":"gameBoardFirst",
+                "yourColor":yourColor,
+                "currentPlayer":color,
+                "board":pythonData
+            }
         jsonData = json.dumps(data)
         print(jsonData)
         currentPlayer[0].send(jsonData.encode())
@@ -145,32 +170,35 @@ class Round():
 
     def run(self):
         for x in self.__players:
-            self.__sendGame(x, False)
+            self.__sendGame(x, False, self.__gameBoard.getPlayerColor(x))
 
         while (self.__currentPlayers.__len__() > 1):
             for x in self.__currentPlayers:
 
                 print ("Current Turn: " + self.__gameBoard.getPlayerColor(x))
-                
-                self.__sendGame(x, True)
+                flag = False
                 while(True):
-                    moveIn = self.__getInput(x)
+                    if (flag == False):
+                        moveIn = self.__getInput(x)
+                    else:
+                        moveIn = self.__getInput(x, True)
+                    flag = False
                     if(moveIn == "RIGHT"):
                         if(self.__movePlayer(x, 1, 0)):
                             break
-                        x[0].send("400 error; not a vaild move or format".encode())
+                        flag = True
                     elif(moveIn == "LEFT"):
                         if(self.__movePlayer(x, -1, 0)):
                             break
-                        x[0].send("400 error; not a vaild move or format".encode())
+                        flag = True
                     elif(moveIn == "UP"):
                         if(self.__movePlayer(x, 0, -1)):
                             break
-                        x[0].send("400 error; not a vaild move or format".encode())
+                        flag = True
                     elif(moveIn == "DOWN"):
                         if(self.__movePlayer(x, 0, 1)):
                             break
-                        x[0].send("400 error; not a vaild move or format".encode())
+                        flag = True
 
                 for x in self.__players:
                     self.__sendGame(x, False)
