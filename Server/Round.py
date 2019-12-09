@@ -62,6 +62,7 @@ class Round():
                     "error":"Not a vaild input or format"
                 }
             data = json.dumps(data)
+            data = '%s%s' % (data, '\n')
             player[0].send(data.encode())
             badMove = False
             data = player[0].recv(1024).decode()
@@ -161,6 +162,7 @@ class Round():
             }
         jsonData = json.dumps(data)
         print(jsonData)
+        jsonData = '%s%s' % (jsonData, '\n')
         currentPlayer[0].send(jsonData.encode())
         
         

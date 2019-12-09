@@ -45,7 +45,7 @@ class Receiver():
         except ValueError as ve:
             print(str(addr) + " tried connected three times and failed")
             print("closing connection...")
-            client.send("500 can not connect to server".encode())
+            client.send("500 can not connect to server\n".encode())
             client.close()
             closed = True
             print("Done!")
@@ -58,17 +58,17 @@ class Receiver():
 
         if (closed == False):
             try:
-                client.send("200 ok".encode())
+                client.send("200 ok\n".encode())
                 
                 time.sleep(1)
 
                 while(True):
                     if (self.lobby.checkInGame((client, addr)) == True):
                         print(str(addr) + " is in a game exiting Receiver...")
-                        client.send("game start".encode())
+                        client.send("game start\n".encode())
                         break
                     else:
-                        client.send("alive?".encode())
+                        client.send("alive?\n".encode())
                         client.recv(1024)
                     time.sleep(1)
             except:

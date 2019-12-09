@@ -92,8 +92,10 @@ class GameBoard():
 
     def getPlayersTiles(self):
         data = []
+        #{"red": {"currentTile": [0, 0], "ownedTiles": [[0, 0], [0, 1]]}}
         for x in self.__playerList:
-            data.append([x.getColor(), x.getCurrentPos(),x.getTiles()])
+            data.append({x.getColor(): {'currentTile': x.getCurrentPos(), 'ownedTiles': x.getTiles()}})
+           # data.append([x.getColor(), x.getCurrentPos(), x.getTiles()])
         
         return data
 
