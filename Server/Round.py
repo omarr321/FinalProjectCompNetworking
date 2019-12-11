@@ -215,6 +215,6 @@ class Round():
         print(self.__gameBoard.getPlayerColor(self.__currentPlayers[0]) + " has won the round!")
         print("continuing after 5 seconds...")
         time.sleep(5)
-        return copy.deepcopy(self.__listInWiningOrder)
+        return copy.copy(self.__listInWiningOrder)
 
         
