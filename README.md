@@ -1,6 +1,9 @@
 # Computer Networking final
 ## Description
 Our project is a game where 8 people join and try to cover the grid in there color. Whoever has the most by end of game wins.
+## Getting Started
+### Install
+### Run
 ## Deliverables
 - Front-end UI that the player can interactional with
 - Back-end server that host the game
