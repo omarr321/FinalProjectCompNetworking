@@ -1,6 +1,6 @@
 # Computer Networking final
 ## Description
-Our project is a game where 8 people join and try to cover the grid in there color. Whoever has the most by end of game wins.
+Our game is a 3 person game where they take turn moving one space and try to get the most colors in the grid.
 ## Getting Started
 ### Install
 ### Run
