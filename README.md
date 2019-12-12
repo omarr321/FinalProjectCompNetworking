@@ -4,7 +4,7 @@ Our game is a 3 person game where they take turn moving one space and try to get
 ## Getting Started
 ### Install
 #### Without Server
-1. Download the client on our latest release.
+1. Download the client on our latest release [Here](https://github.com/omarr321/FinalProjectCompNetworking/releases)
 #### With Server
 1. Download the master branch.
 ### Run
