@@ -6,7 +6,7 @@ Our game is a 3 person game where they take turn moving one space and try to get
 #### Without Server
 1. Download the client on our latest release [here](https://github.com/omarr321/FinalProjectCompNetworking/releases).
 #### With Server
-1. Download the master branch.
+1. Download the master branch [here](https://github.com/omarr321/FinalProjectCompNetworking).
 ### Run
 ## Deliverables
 - Front-end UI that the player can interactional with
