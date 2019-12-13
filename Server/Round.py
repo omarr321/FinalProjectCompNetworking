@@ -4,7 +4,12 @@ import time
 import json
 import socket
 
+
+#This is the Round class
+#This class runs one round of the game
+
 class Round():
+    #Constructor for players, gridSize, and optional color
     def __init__(self, players, gridSize, colors = None):
         if (colors != None):
             self.__players = players
@@ -24,6 +29,8 @@ class Round():
         else:
             self.__noColor(players, gridSize)
 
+    #This is called when the colors of the construster is set to none
+    #this set up just like the construce just with random given numbers
     def __noColor(self, players, gridSize):
         self.__players = players
         self.__gridSize = gridSize
@@ -40,6 +47,7 @@ class Round():
             except LookupError as le:
                 print(le)
 
+    #this method will try to move the player by the x and y change. Will return true if sussful, false if not.
     def __movePlayer(self, player, xChange, yChange):
         try:
             self.__gameBoard.movePlayer(player, xChange, yChange)
@@ -48,6 +56,7 @@ class Round():
             print(ve)
             return False
     
+    #this will get input from the current turn player and send back if the move was bad other will continue
     def __getInput(self, player, badMove = False):
         while(True):
             if (badMove == False):
@@ -78,6 +87,7 @@ class Round():
                 badMove = True
                 
 
+    #this checks the input of the player and sees if it a vaild format/move
     def __checkInput(self, input):
         vaildIn = False
 
@@ -86,60 +96,11 @@ class Round():
         
         return vaildIn
 
+    #This will checkt to see if a player can move or not
     def __checkPlayer(self, player):
         return not(self.__gameBoard.canMove(player))
 
-#    def __printGame(self):
-#        data = self.__gameBoard.getPlayersTiles()
-#
-#        for y in range(1, self.__gridSize + 1):
-#            for p in range(1, self.__gridSize):
-#                print("-----", end = "", flush = True)
-#            print("------")
-#            for x in range(1, self.__gridSize + 1):
-#                dataPrintFlag = False
-#                for d in data:
-#                    
-#                    for t in d[2]:
-#                        
-#                        if (t == [x, y]):
-#                            if (d[0] == "Red"):
-#                                if (d[1] == t):
-#                                    print("|(re)", end = "", flush = True)
-#                                else:
-#                                    print("| re ", end = "", flush = True)
-#                                dataPrintFlag = True
-#                            elif (d[0] == "Blue"):
-#                                if (d[1] == t):
-#                                    print("|(bl)", end = "", flush = True)
-#                                else:
-#                                    print("| bl ", end = "", flush = True)
-#                                dataPrintFlag = True
-#                            elif (d[0] == "Green"):
-#                                if (d[1] == t):
-#                                    print("|(gr)", end = "", flush = True)
-#                                else:
-#                                    print("| gr ", end = "", flush = True)
-#                                dataPrintFlag = True
-#                            elif (d[0] == "Purple"):
-#                                if (d[1] == t):
-#                                    print("|(pu)", end = "", flush = True)
-#                                else:
-#                                    print("| pu ", end = "", flush = True)
-#                                dataPrintFlag = True
-#                            elif (d[0] == "Pink"):
-#                                if (d[1] == t):
-#                                   print("|(pi)", end = "", flush = True)
-#                                else:
-#                                    print("| pi ", end = "", flush = True)
-#                                dataPrintFlag = True
-#                if (not(dataPrintFlag)):
-#                    print("|    ", end = "", flush = True)
-#            print("|")
-#        for p in range(1, self.__gridSize):
-#            print("-----", end = "", flush = True)
-#        print("------")
-
+    #This will send the game to a player
     def __sendGame(self, currentPlayer, request, yourColor = None):
         pythonData = self.__gameBoard.getPlayersTiles()
         pythonData = json.dumps(pythonData)
@@ -166,10 +127,11 @@ class Round():
         currentPlayer[0].send(jsonData.encode())
         
         
-
+    #This get a player color
     def getPlayerColor(self, player):
         return self.__gameBoard.getPlayerColor(player)
 
+    #This is what runs the round and will return the scoreboard of the game total
     def run(self):
         for x in self.__players:
             self.__sendGame(x, False, self.__gameBoard.getPlayerColor(x))

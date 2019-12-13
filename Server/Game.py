@@ -3,7 +3,9 @@ import time
 import json
 import socket
 
+#this runs the game
 class Game():
+    #this is a construor
     def __init__(self, players, gridSize, numOfRounds = 3):
         if (players.__len__() <= 1):
             raise ValueError("Error: Illegal state; number of players can not be less then 2")
@@ -21,6 +23,7 @@ class Game():
             temp = [x, 0]
             self.__scores.append(temp)
 
+    #this will return the the list of players and list of colors in winning order
     def __getNextRoundLists(self, gameData):
         temp = []
         players = []
@@ -39,6 +42,7 @@ class Game():
 
         return temp
 
+    #This will update the score
     def __updateScore(self, player, scoreChange):
         for x in self.__scores:
             if(x[0] == player):
@@ -46,19 +50,7 @@ class Game():
                 score = score + scoreChange
                 x.append(score)
 
-#    def __printScores(self):
-#        temp = []
-#        for x in self.__scores:
-#            copyFlip = [x[1], x[0]]
-#            temp.append(copyFlip)
-#            
-#        temp.sort()
-#        print("current Standings:")
-#
-#        for x in range(0, temp.__len__()):
-#            current = temp.pop()
-#            print(str(x + 1) + ". " + str(self.__roundCurrent.getPlayerColor(current[1])) + " with " + str(current[0]) + " points!")
-
+    #This will send scores the the players in the game
     def __sendScores(self, final):
         temp = []
         for x in self.__scores:
@@ -89,6 +81,7 @@ class Game():
         for x in self.__players:
             x[0].send(data.encode())        
 
+    #This will play the game
     def play(self):
         time.sleep(5)
         self.__roundCurrent = Round.Round(self.__players, self.__gridSize)

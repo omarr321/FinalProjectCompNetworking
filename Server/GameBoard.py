@@ -4,7 +4,9 @@ import copy
 playerClass = Player.Player;
 import random
 
+#is the game board whitch is a grid of player and tiles
 class GameBoard():
+    #construtor
     def __init__(self, gridSize = 10):
         
         if (gridSize <= 0):
@@ -13,6 +15,7 @@ class GameBoard():
         self.__playerList = []
         self.__colors = ["Red", "Green", "Blue", "Pink", "Purple"]
 
+    #this will check to see if a postion is free to move on to
     def __isFree(self, posX, posY):
         for player in self.__playerList:
             for tile in player.getTiles():
@@ -24,6 +27,7 @@ class GameBoard():
 
         return True    
 
+    #this will add a player to the game board
     def addPlayer(self, player, color = None):
         if(color != None):
             placed = False;
@@ -41,6 +45,7 @@ class GameBoard():
         else:
             self.__addPlayerNoColor(player)  
 
+    #this also adds a player to the game board but will no random colors
     def __addPlayerNoColor(self, player):
         placed = False;
         while (not(placed)):
@@ -57,6 +62,7 @@ class GameBoard():
                 self.__colors.remove(self.__colors[color])
                 placed = True   
 
+    #this will move a player and check to see if it vaild
     def movePlayer(self, player, xChange, yChange):
         for x in self.__playerList:
             if (x.getClientInfo() == player):
@@ -65,6 +71,7 @@ class GameBoard():
                 else:
                     raise ValueError("Error: Illegal move")
 
+    #this will check to see if the player can move
     def canMove(self, player):
         canMoveFlag = False
 
@@ -83,6 +90,7 @@ class GameBoard():
         
         return canMoveFlag    
 
+    #this returns the data to a string
     def toString(self):
         temp = ""
         for x in self.__playerList:
@@ -90,6 +98,7 @@ class GameBoard():
 
         return temp
 
+    #this gets all the tiles that all players own
     def getPlayersTiles(self):
         data = []
         #{"red": {"currentTile": [0, 0], "ownedTiles": [[0, 0], [0, 1]]}}
@@ -99,6 +108,7 @@ class GameBoard():
         
         return data
 
+    #this reuturns a player color
     def getPlayerColor(self, player):
         for x in self.__playerList:
             if (x.getClientInfo() == player):

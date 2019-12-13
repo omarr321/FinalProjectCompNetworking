@@ -8,7 +8,9 @@ HOST = "10.220.82.180"
 PORT = 255
 lobby = Lobby.Lobby()
 
+#This class get incoming connection and put them intot the server
 class Receiver():
+    #construtor
     def __init__(self, host, port, lobby):
         self.host = host
         self.port = port
@@ -20,6 +22,7 @@ class Receiver():
         newLobby.start()
         print("The server is ready to receive...")
     
+    #this will listen for new clients and creates a new thread for that client
     def listen(self):
         self.serverSocket.listen(3)
         while(True):
@@ -27,7 +30,7 @@ class Receiver():
             newThread = threading.Thread(target = self.ClientController,args = (client, addr))
             newThread.start()
 
-
+    #this will try to conencted the client to the lobby and make sure it is still connected till the game starts
     def ClientController(self, client, addr):
         closed = False
         try:
