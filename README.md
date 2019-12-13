@@ -32,7 +32,7 @@ Our game is a turn-based game that takes place on a 5x5 grid, with the goal bein
 ## Demo Video
 You can watch our demo video [here](https://youtu.be/RF2u6ZBb570).
 ## References
-Our team did not use any code that was not ours. However, we did find helpful information for debugging purposes on https://stackoverflow.com/ and https://www.geeksforgeeks.org/. Professor Pham has also significantly contributed to our project by mentoring us and guiding us through to fix errors and optimize our program.
+Our team did not use any code that was not ours. However, we did find helpful information for debugging purposes on [Stack Overflow](https://stackoverflow.com/) and [GeeksforGeeks](https://www.geeksforgeeks.org/). Professor Pham has also significantly contributed to our project by mentoring us and guiding us through to fix errors and optimize our program.
 ## Team Members
 - Konstantina Dimaki; coordinating, bug fixing/testing
 - Omar Radwan; Backend engineer
