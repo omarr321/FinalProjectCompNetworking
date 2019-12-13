@@ -10,15 +10,16 @@ Our game is a turn-based game that takes place on a 5x5 grid, with the goal bein
 ### Run
 #### Without Server
 1. Make sure you have python installed witch you can do [here](https://www.python.org/downloads/).
-2. Make sure you have BeautifulTable installed which you can do [here](https://beautifultable.readthedocs.io/en/latest/install.html).
-3. Run the Client.py.
+1. Make sure you have BeautifulTable installed which you can do [here](https://beautifultable.readthedocs.io/en/latest/install.html).
+1. Run the Client.py.
 #### With Server
 1. Make sure you have python installed witch you can do [here](https://www.python.org/downloads/).
-2. Make sure you have BeautifulTable installed which you can do [here](https://beautifultable.readthedocs.io/en/latest/install.html).
-3. Unzip the master zip.
-4. Navigate to the Sever folder.
-5. Run Receiver.py.
-6. Run Client.py.
+1. Make sure you have BeautifulTable installed which you can do [here](https://beautifultable.readthedocs.io/en/latest/install.html).
+1. Unzip the master zip.
+1. Navigate to the Server folder.
+1. Run Receiver.py.
+1. Navigate to the Client folder.
+1. Run Client.py.
 ## Deliverables
 - Front-end UI that the player can interaction with
 - Back-end server that host the game
