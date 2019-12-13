@@ -29,7 +29,8 @@ Our game is a 3 person game where they take turn moving one space and try to get
 1. Everyone one takes turns moving one space at a time.
 1. In order to win you have to have the most squares on the grid colored by your color, by passing through them.
 1. Real-time progress of game board is graphically displayed on screen.
-
+## Demo Video
+You can watch our demo video [here](https://youtu.be/RF2u6ZBb570).
 ## Team Members
 - Omar Radwan, Backend engineer.
 - Konstantina Dimaki, <Role>.
